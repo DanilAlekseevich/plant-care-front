@@ -42,7 +42,10 @@
       </div>
     </form>
 
-    <!-- TODO: Ссылка на Login -->
+    <p class="text-center">
+  Уже есть аккаунт?
+  <router-link to="/login" class="link-button">Войти</router-link>
+</p>
   </div>
 </template>
 
@@ -71,10 +74,22 @@ const handleRegister = async () => {
   }
 
   error.value = null;
-};
 
-const goToLogin = () => {
-  // TODO: Перейти на Login
+  try {
+    await fetch('http://localhost:8080/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+      }),
+    });
+  } catch (err) {
+    error. value = 'Ошибка сети';
+    console.error(err)
+  }
 };
 </script>
 

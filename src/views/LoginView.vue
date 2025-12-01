@@ -49,10 +49,6 @@ const handleLogin = async () => {
   console.log('Login attempt:', { email: email.value, password: password.value });
   // TODO: Вызвать authService.login()
 };
-
-const goToRegister = () => {
-  // TODO: Перейти на экран регистрации
-};
 </script>
 
 <style scoped>
