@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { authService } from '../services/authService';
 
 const email = ref('');
 const password = ref('');
@@ -76,16 +77,7 @@ const handleRegister = async () => {
   error.value = null;
 
   try {
-    await fetch('http://localhost:8080/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value,
-      }),
-    });
+    await authService.login(email.value, password.value);
   } catch (err) {
     error. value = 'Ошибка сети';
     console.error(err)

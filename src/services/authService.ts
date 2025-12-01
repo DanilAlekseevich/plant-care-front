@@ -1,32 +1,48 @@
-import type { User } from '@/types/auth';
+import type { User } from '../types/auth';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 class AuthService {
-  // Для тестирования сохраняем в sessionStorage
-  // Позже заменим на реальное API
-  
+  private token: string | null = null;
+
   async login(email: string, password: string): Promise<User> {
-    // TODO: Отправить POST запрос на backend
-    // POST /api/auth/login
-    // Сохранить token
-    // Вернуть User
-    throw new Error('Not implemented');
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Ошибка входа');
+    }
+
+    const data = await response.json();
+      this.token = data.token;
+      localStorage.setItem('token', this.token ?? '');
+    return data.user;
   }
 
   async register(email: string, password: string, name: string): Promise<User> {
-    // TODO: Отправить POST запрос на backend
-    // POST /api/auth/register
-    // Сохранить token
-    // Вернуть User
-    throw new Error('Not implemented');
-  }
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, name }),
+    });
 
-  async logout(): Promise<void> {
-    // TODO: Очистить token
-  }
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Ошибка регистрации');
+    }
 
-  getCurrentUser(): User | null {
-    // TODO: Получить User из sessionStorage/localStorage
-    return null;
+    const data = await response.json();
+    this.token = data.token;
+    localStorage.setItem('token', this.token ?? '');
+    return data.user;
   }
 }
 
